@@ -21,7 +21,7 @@ module Crayola
       end
 
       def series
-        Scraper.series
+        @crayola.keys
       end
 
       def color_names
@@ -36,6 +36,8 @@ module Crayola
 
       def build
         eval open(File.expand_path(File.dirname(__FILE__)+'/crayola/data')).read
+      rescue
+        nil
       end
     end
     init
