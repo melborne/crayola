@@ -21,8 +21,8 @@ class TestCrayola < Test::Unit::TestCase
     @names.each { |name| assert(cnames.include?(name), "Name are not match:#{name}") }
   end
   
-  def test_all_colors
-    size = @crayola.all_colors.size
+  def test_colors_size
+    size = @crayola.colors.size
     assert_equal(275, size)
   end
 

@@ -5,36 +5,31 @@ module Crayola
   require_relative 'crayola/color'
   class Crayola
     class << self
+      attr_reader :series, :colors
       def init
-        @crayola = load_build_file || Scraper.build
-        @colors = []
-      end
-
-      def all_colors
-        return @colors unless @colors.empty?
-        @colors = crayolas_to_array { |series, attrs| Color.new(series, *attrs) }
+        crayola = load_build_file || Scraper.build
+        @series = crayola.keys
+        @colors = build_colors(crayola)
       end
 
       def color(name)
-        all_colors.detect { |c| c.name == name }
+        @colors.detect { |c| c.name == name }
       end
 
       def colors_in_series(series)
-        all_colors.select { |c| c.series == series }
-      end
-
-      def series
-        @crayola.keys
+        @colors.select { |c| c.series == series }
       end
 
       def color_names
-        crayolas_to_array { |series, attrs| attrs[0] }
+        @colors.map(&:name)
       end
 
-      def crayolas_to_array
-        arr = []
-        @crayola.each { |series, v| v.each { |attrs| arr << yield(series, attrs) } }
-        arr
+      def build_colors(crayola)
+        tmp = []
+        crayola.each do |series, colors|
+          colors.each { |attrs| tmp << Color.new(series, *attrs) }
+        end
+        tmp
       end
 
       def load_build_file(io=CURRENT_DIR+'/crayola.yml')
