@@ -10,11 +10,11 @@ class TestScraper < Test::Unit::TestCase
   end
 
   def test_build
-    p @scraper.build
+    @scraper.build
   end
   
   def test_series
-    p @scraper.series
+    @scraper.series
   end
 
   def test_to_file
