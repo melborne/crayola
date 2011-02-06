@@ -19,6 +19,10 @@ module Crayola
         all_colors.detect { |c| c.name == name }
       end
 
+      def colors_in_series(series)
+        all_colors.select { |c| c.series == series }
+      end
+
       def series
         @crayola.keys
       end
@@ -39,6 +43,7 @@ module Crayola
         nil
       end
     end
+
     init
   end
 end

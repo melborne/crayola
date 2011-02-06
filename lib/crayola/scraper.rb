@@ -1,6 +1,21 @@
 require "nokogiri"
 require "open-uri"
 
+class String
+  def to_obj
+    case self
+    when /\(\s*(\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3})\s*\)/
+      $1.split(',').map(&:to_i)
+    when /\d{4}/
+      $&.to_i
+    when ""
+      nil
+    else
+      self
+    end
+  end
+end
+
 module Crayola
   CURRENT_DIR = File.expand_path(File.dirname(__FILE__))
   class Scraper
@@ -12,7 +27,8 @@ module Crayola
       end
 
       def to_file(io=CURRENT_DIR+'/crayola.yml')
-        YAML.dump build, open(io, 'w')
+        raise IOError, "File exist:#{io}" if File.exist?(io)
+        File.open(io, 'w') { |f| YAML.dump build, f }
       end
 
       def to_yaml
@@ -39,7 +55,8 @@ module Crayola
           tb.css('tr').each do |tr|
             q[series[i]] << tr.css('td').map do |td|
               hex = td.attr('style')[/#[A-Z0-9]{6}/] rescue nil
-              hex ? [td.content, hex] : td.content
+              content = td.content ? td.content.to_obj : nil
+              hex ? [content, hex] : content
             end
           end
         end
@@ -63,12 +80,13 @@ module Crayola
       end
 
       def normalize_data(crayons)
-        have_attrs = ['Standard Colors', 'Metallic FX']
-        have_no_attrs = crayons.keys - have_attrs
-        have_attrs.each do |name|
-          crayons[name] = crayons[name].map { |attr| attr.flatten.uniq[1..-1] }[1..-1]
+        have_hex = ['Standard Colors', 'Metallic FX']
+        have_no_hex = crayons.keys - have_hex
+        have_hex.each do |name|
+          crayons[name] =
+              crayons[name].map { |color| [*color[1], *color[3..-1]] }[1..-1]
         end
-        have_no_attrs.each { |name| crayons[name] = crayons[name].flatten(1) }
+        have_no_hex.each { |name| crayons[name].flatten!(1) }
         crayons
       end
 
