@@ -8,11 +8,11 @@ class TestCrayola < Test::Unit::TestCase
   end
 
   def test_crayola_series
-    # p @crayola.series
+    p @crayola.series
   end
 
   def test_color_names
-    # p @crayola.color_names
+    p @crayola.color_names
   end
 
   def test_all_colors
@@ -25,5 +25,9 @@ class TestCrayola < Test::Unit::TestCase
     names.each_with_index do |name, i|
       assert_equal(hexes[i], @crayola.color(name).hex)
     end
+  end
+
+  def test_load_yaml_file
+    puts @crayola.load_file
   end
 end

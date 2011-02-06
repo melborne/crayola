@@ -1,10 +1,22 @@
+require "nokogiri"
+require "open-uri"
+
 module Crayola
+  CURRENT_DIR = File.expand_path(File.dirname(__FILE__))
   class Scraper
     URL = "http://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors"
     class << self
       def build
         @html ||= get(URL)
         parse @html
+      end
+
+      def to_file(io=CURRENT_DIR+'/crayola.yml')
+        YAML.dump build, open(io, 'w')
+      end
+
+      def to_yaml
+        YAML.dump build
       end
 
       def get(url)
@@ -59,6 +71,7 @@ module Crayola
         have_no_attrs.each { |name| crayons[name] = crayons[name].flatten(1) }
         crayons
       end
+
     end
   end
 end

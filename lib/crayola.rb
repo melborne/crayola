@@ -1,5 +1,4 @@
-require "nokogiri"
-require "open-uri"
+autoload :YAML, 'yaml'
 
 module Crayola
   require_relative 'crayola/scraper'
@@ -7,7 +6,7 @@ module Crayola
   class Crayola
     class << self
       def init
-        @crayola = build || Scraper.build
+        @crayola = load_file || Scraper.build
         @colors = []
       end
 
@@ -34,8 +33,8 @@ module Crayola
         arr
       end
 
-      def build
-        eval open(File.expand_path(File.dirname(__FILE__)+'/crayola/data')).read
+      def load_file(io=CURRENT_DIR+'/crayola.yml')
+        YAML.load open(io, 'r')
       rescue
         nil
       end
