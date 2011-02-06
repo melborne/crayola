@@ -6,7 +6,7 @@ module Crayola
   class Crayola
     class << self
       def init
-        @crayola = load_file || Scraper.build
+        @crayola = load_build_file || Scraper.build
         @colors = []
       end
 
@@ -37,7 +37,7 @@ module Crayola
         arr
       end
 
-      def load_file(io=CURRENT_DIR+'/crayola.yml')
+      def load_build_file(io=CURRENT_DIR+'/crayola.yml')
         YAML.load open(io, 'r')
       rescue
         nil

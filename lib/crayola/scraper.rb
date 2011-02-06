@@ -80,13 +80,13 @@ module Crayola
       end
 
       def normalize_data(crayons)
-        have_hex = ['Standard Colors', 'Metallic FX']
-        have_no_hex = crayons.keys - have_hex
-        have_hex.each do |name|
-          crayons[name] =
-              crayons[name].map { |color| [*color[1], *color[3..-1]] }[1..-1]
+        detailed_tables = ['Standard Colors', 'Metallic FX']
+        just_name_tables = crayons.keys - detailed_tables
+        detailed_tables.each do |name|
+          crayons[name].reject! { |item| item.empty? }
+          crayons[name].map! { |color| [*color[1], *color[3..-1]] }
         end
-        have_no_hex.each { |name| crayons[name].flatten!(1) }
+        just_name_tables.each { |name| crayons[name].flatten!(1) }
         crayons
       end
 

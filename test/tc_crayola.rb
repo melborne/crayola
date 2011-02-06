@@ -46,8 +46,8 @@ class TestCrayola < Test::Unit::TestCase
     end
   end
   
-  def test_load_yaml_file
-    file =@crayola.load_file
+  def test_load_build_file
+    file =@crayola.load_build_file
     assert_equal(file, Crayola::Scraper.build)
   end
 end
