@@ -84,7 +84,13 @@ module Crayola
         just_name_tables = crayons.keys - detailed_tables
         detailed_tables.each do |name|
           crayons[name].reject! { |item| item.empty? }
-          crayons[name].map! { |color| [*color[1], *color[3..-1]] }
+          crayons[name].map! do |color|
+            if color[1] == "White"
+              [*color[1], *color[2..-1]] # handle irregular           
+            else
+              [*color[1], *color[3..-1]]
+            end
+          end
         end
         just_name_tables.each { |name| crayons[name].flatten!(1) }
         crayons

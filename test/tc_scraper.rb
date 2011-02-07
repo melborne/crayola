@@ -16,8 +16,12 @@ class TestScraper < Test::Unit::TestCase
   def test_series
     @scraper.series
   end
-
+  
   def test_to_file
     @scraper.to_file
+  end
+
+  def test_yaml
+    @scraper.to_yaml
   end
 end
